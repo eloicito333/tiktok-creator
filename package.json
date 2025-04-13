@@ -1,0 +1,29 @@
+{
+  "name": "tiktok-creator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "imports": {
+    "#src/*": "./src/*"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/index.js",
+    "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --watch src/index.js",
+    "test": "npm run test-tts",
+    "test-tts": "npm run run ./tests/test-tts.js",
+    "setup-audio-samples": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/setupNewAudioSamples.js",
+    "run": "node --env-file-if-exists=.env --env-file-if-exists=.env.local"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "fs": "^0.0.1-security",
+    "morgan": "^1.10.0",
+    "openai": "^4.85.4",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.2"
+  }
+}
