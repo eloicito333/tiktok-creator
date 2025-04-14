@@ -57,6 +57,11 @@ app.post('/video/script', async (req, res) => {
   console.log(`File created: ${scriptFilePath}`);
 
   const processedScript = await processScript(script, folderPath)
+
+  res.status(200).json({
+    videoId,
+    processedScript,
+  });
 })
 
 // Serve OpenAPI JSON file
