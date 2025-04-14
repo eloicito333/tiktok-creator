@@ -1,9 +1,17 @@
+#Node.js
 node_modules
+
+#Generated dirs when code is executed | Data storage
 tests/test-gen
 storage
 
+#IDE config dir
 .idx
 .vscode
 
+#MacOS dir config
+**/.DS_Store
+
+#Environment variables
 .env
 .env.local
