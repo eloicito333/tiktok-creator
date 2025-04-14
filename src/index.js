@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid"
 import fs from "fs"
 import { __rootdirname, __srcdirname } from "#src/dirnames.js";
 import path from "path";
-import { generateAudioAndCaptions } from "#src/pipeline/generateAudioAndCaptions.js";
+import { processScript } from "#src/pipeline/mainPipeline.js";
 import { ensureDirExists } from "#src/lib/fileUtils.js";
 import morgan from "morgan"
 
@@ -56,10 +56,7 @@ app.post('/video/script', async (req, res) => {
   fs.writeFileSync(scriptFilePath, JSON.stringify(script, null, 2));
   console.log(`File created: ${scriptFilePath}`);
 
-
-  const speechScript = script.filter(el => el.type === 'speech')
-
-  const transcriptFiles = await generateAudioAndCaptions(speechScript, folderPath)
+  const processedScript = await processScript(script, folderPath)
 })
 
 // Serve OpenAPI JSON file
