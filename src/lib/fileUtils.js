@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 
-export const ensureDirExists = (folderName) => {
+export const ensureDirExists = async (folderName) => {
   try {
-    fs.mkdirSync(folderName, { recursive: true });
+    await fs.mkdir(folderName, { recursive: true });
   } catch (err) {
     // If the error is not related to the directory already existing, throw it
     if (err.code !== 'EEXIST') {

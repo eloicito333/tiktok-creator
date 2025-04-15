@@ -4,7 +4,7 @@ import { ensureDirExists } from "./lib/fileUtils.js";
 
 export const agentsDir = path.join(__rootdirname, "/resources/agents")
 
-export const agentsInfo = (() => {
+export const agentsInfo = await (async () => {
   const initialObj = {}
 
   const agentsDirs = fs.readdirSync(agentsDir)
@@ -17,7 +17,7 @@ export const agentsInfo = (() => {
     initialObj[agentName].audioSamplePathName = path.join(agentPath, `audio_sample.mp3`)
     initialObj[agentName].referenceTextPathName = path.join(agentPath, `reference_text.txt`)
     const agentImagesDir = path.join(agentPath, "images")
-    ensureDirExists(agentImagesDir)
+    await ensureDirExists(agentImagesDir)
     initialObj[agentName].images = {}
     fs.readdirSync(agentImagesDir).forEach((file) => {
       const imagePath = path.join(agentImagesDir, file)
