@@ -9,10 +9,9 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/index.js",
     "dev": "node --env-file-if-exists=.env --env-file-if-exists=.env.local --watch src/index.js",
-    "test": "npm run test-tts",
-    "test-tts": "npm run run ./tests/test-tts.js",
-    "setup-audio-samples": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/setupNewAudioSamples.js",
-    "run": "node --env-file-if-exists=.env --env-file-if-exists=.env.local"
+    "run": "node --env-file-if-exists=.env --env-file-if-exists=.env.local",
+    "test": "node --env-file-if-exists=.env --env-file-if-exists=.env.local tests/runTests.js",
+    "setup-audio-samples": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/setupNewAudioSamples.js"
   },
   "author": "",
   "license": "ISC",
