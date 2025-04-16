@@ -51,6 +51,14 @@ videoRouter.post("/script", async (req, res) => {
 
   const processedScript = await processScript(script, folderPath)
 
+  fs.writeFileSync(path.join(folderPath, "processedScript.json"), JSON.stringify(processedScript, null, 2))
+
+  const videoTimeline = await generateVideoTimeline(processedScript)
+
+  const videoTimelinesDir = path.join(folderPath, "videoTimelines")
+  await ensureDirExists(videoTimelinesDir)
+  fs.writeFileSync(path.join(videoTimelinesDir, "videoTimeline_v1.json"), JSON.stringify(videoTimeline, null, 2))
+
   const videoRendersFolder = path.join(folderPath, "renders")
   await ensureDirExists(videoRendersFolder)
   const videoPath = path.join(videoRendersFolder, `${videoId}.mp4`)
@@ -58,12 +66,12 @@ videoRouter.post("/script", async (req, res) => {
   await renderVideo(videoId, videoPath, {
     videoId,
     title,
-    processedScript,
+    videoTimeline,
   })
 
   res.status(200).json({
     videoId,
     title,
-    processedScript,
+    videoTimeline,
   });
 })
