@@ -17,12 +17,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@remotion/cli": "4.0.287",
+    "@remotion/renderer": "4.0.287",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
     "morgan": "^1.10.0",
     "openai": "^4.85.4",
     "puppeteer": "^24.6.1",
+    "remotion": "4.0.287",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
   }
