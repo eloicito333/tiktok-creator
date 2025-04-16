@@ -26,4 +26,9 @@ const imageSchema = z.object({
     },
 });
 
-export const scriptSchema = z.array(z.union([speechSchema, imageSchema]));
+const pauseSchema = z.object({
+  type: z.literal("pause"),
+  duration: z.number().min(1, "Duration must be positive and in milliseconds")
+});
+
+export const scriptSchema = z.array(z.union([speechSchema, imageSchema, pauseSchema]));

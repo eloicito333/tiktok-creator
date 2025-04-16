@@ -24,6 +24,8 @@ export const processScript = async (script, folderPath) => {
           data = await speechSubPipeline(part, index, {audioFolderPath, transcriptFolderPath})
         } else if(type === "image") {
           data = await imageSubPipeline(part, index, {imageFolderPath})
+        } else if(type === "pause") {
+          data = {}
         } else {
           throw new Error(`Invalid type provided in index ${index}: ${type}`)
         }
