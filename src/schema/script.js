@@ -17,7 +17,13 @@ const imageSchema = z.object({
     type: z.literal("image"),
     source: imageSourceSchema,
     prompt: z.string().min(1, "prompt field cannot be empty"),
-    duration: z.number().min(1, "Duration must be positive and in milliseconds"),
+    duration: z.union([
+      z.number().min(1, "Duration must be positive and in milliseconds"),
+      z.null()
+    ]),
+    when: {
+      after_spoken_word: z.number()
+    },
 });
 
 export const scriptSchema = z.array(z.union([speechSchema, imageSchema]));
