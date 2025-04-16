@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TikTokVideo({ processedScript }) {
+function TikTokVideo({ videoTimeline }) {
   return (
     <div>TikTokVideo</div>
   )
