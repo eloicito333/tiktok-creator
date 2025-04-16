@@ -1,3 +1,4 @@
+import { agentsDefaultAction } from "#src/agentsInfo.js";
 import { generateTranscription } from "./stt.js";
 import { generateSpeech } from "./tts.js";
 import path from "path";
@@ -18,6 +19,7 @@ export const speechSubPipeline = async (part, index, {audioFolderPath, transcrip
 
     return {
         audioFilePath,
-        transcription
+        transcription,
+        ...(!part?.action && {action: agentsDefaultAction})
     };
 }

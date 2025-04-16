@@ -2,6 +2,8 @@ import path from "path"
 import { __rootdirname } from "#src/dirnames.js";
 import { ensureDirExists } from "./lib/fileUtils.js";
 
+export const agentsDefaultAction = "at_phone"
+
 export const agentsDir = path.join(__rootdirname, "/resources/agents")
 
 export const agentsInfo = await (async () => {
@@ -26,6 +28,7 @@ export const agentsInfo = await (async () => {
       const fileName = path.parse(file).name
       initialObj[agentName].images[fileName] = imagePath
     })
+    initialObj[agentName].images.default = initialObj[agentName].images[agentsDefaultAction]
   })
 
   return initialObj;
