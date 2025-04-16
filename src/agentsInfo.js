@@ -8,7 +8,7 @@ export const agentsInfo = await (async () => {
   const initialObj = {}
 
   const agentsDirs = fs.readdirSync(agentsDir)
-  agentsDirs.forEach((agentDir) => {
+  agentsDirs.forEach(async (agentDir) => {
     const agentPath = path.join(agentsDir, agentDir)
     if (!fs.statSync(agentPath).isDirectory()) return
     const agentName = path.parse(agentDir).name
