@@ -1,6 +1,7 @@
 import path from "path"
+import fs from "fs"
 import { __rootdirname } from "#src/dirnames.js";
-import { ensureDirExists } from "./lib/fileUtils.js";
+import { ensureDirExists } from "#src/lib/fileUtils.js";
 
 export const agentsDefaultAction = "at_phone"
 

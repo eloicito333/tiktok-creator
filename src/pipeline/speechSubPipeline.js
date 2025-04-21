@@ -1,4 +1,3 @@
-import { agentsDefaultAction } from "#src/agentsInfo.js";
 import { generateTranscription } from "./stt.js";
 import { generateSpeech } from "./tts.js";
 import path from "path";

@@ -1,7 +1,7 @@
 import fs from "fs"
 import { ensureDirExists } from "#src/lib/fileUtils.js"
 import {generateRefTexts} from "#src/lib/generateRefTexts.js"
-import { agentsInfo, refTextsDir } from "#src/agentsInfo.js"
+import { agentsInfo, refTextsDir } from "#src/lib/agentsInfo.js"
 
 const audioFiles = Object.values(agentsInfo).map((agent) => agent.audioSamplePathName)
 
