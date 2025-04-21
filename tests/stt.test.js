@@ -1,6 +1,7 @@
 import fs from "fs"
 import path from "path"
 import { testsGenDirName } from "./testDirNames.js"
+import { generateTranscription } from "#src/pipeline/stt.js"
 
 const runSttTest = async () => {
   console.log("⏳ Running TTS test to generate the audio to transcribe...")
