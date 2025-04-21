@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { availableAgents } from "../agentsInfo.js";
+import { availableAgents } from "#src/lib/agentsInfo.js";
 
 const languageSchema = z.enum(["ca", "en", "es"]);
 const imageSourceSchema = z.enum(["web", "ai"]);
@@ -21,9 +21,9 @@ const imageSchema = z.object({
       z.number().min(1, "Duration must be positive and in milliseconds"),
       z.null()
     ]),
-    when: {
+    when: z.object({
       after_spoken_word: z.number()
-    },
+    }),
 });
 
 const pauseSchema = z.object({
