@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "type": "module",
   "imports": {
-    "#src/*": "./src/*"
+    "#src/*": "./src/*",
+    "#remotion/*": "./remotion/*"
   },
   "scripts": {
     "start": "node --env-file-if-exists=.env --env-file-if-exists=.env.local src/index.js",
@@ -17,16 +18,28 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@remotion/cli": "4.0.287",
-    "@remotion/renderer": "4.0.287",
+    "@remotion/captions": "^4.0.288",
+    "@remotion/cli": "^4.0.288",
+    "@remotion/google-fonts": "4.0.288",
+    "@remotion/media-parser": "^4.0.289",
+    "@remotion/openai-whisper": "^4.0.288",
+    "@remotion/renderer": "^4.0.288",
+    "@remotion/tailwind-v4": "4.0.288",
+    "@tailwindcss/postcss": "^4.1.4",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "fs": "^0.0.1-security",
     "morgan": "^1.10.0",
     "openai": "^4.85.4",
+    "postcss": "^8.5.3",
     "puppeteer": "^24.6.1",
-    "remotion": "4.0.287",
+    "remotion": "^4.0.288",
+    "tailwindcss": "^4.1.4",
+    "undici": "^7.8.0",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }
