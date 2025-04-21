@@ -5,13 +5,11 @@ import { imageSubPipeline } from "./imageSubPipeline.js";
 
 export const processScript = async (script, folderPath) => {
   const audioFolderPath = path.join(folderPath, "audios")
-  const transcriptFolderPath = path.join(folderPath, "transcriptions")
   const imageFolderPath = path.join(folderPath, "images")
 
   // Ensure the folder exists
-  await ensureDirExists(folderPath);
   await ensureDirExists(audioFolderPath);
-  await ensureDirExists(transcriptFolderPath);
+  await ensureDirExists(imageFolderPath);
 
   // Process each script part in parallel
   const processedScript = await Promise.all(
@@ -21,7 +19,7 @@ export const processScript = async (script, folderPath) => {
         let data;
         
         if(type === "speech") {
-          data = await speechSubPipeline(part, index, {audioFolderPath, transcriptFolderPath})
+          data = await speechSubPipeline(part, index, {audioFolderPath})
         } else if(type === "image") {
           data = await imageSubPipeline(part, index, {imageFolderPath})
         } else if(type === "pause") {
@@ -35,7 +33,7 @@ export const processScript = async (script, folderPath) => {
           ...data,
         }
       } catch (error) {
-        console.error(`Error processing part ${index}: ${error}`);
+        console.error(`❌ Error processing part ${index}: ${error}`);
         return null;
       }
     })

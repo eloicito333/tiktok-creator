@@ -8,7 +8,7 @@ export const fetchWebImageUrl = async (prompt) => {
   searchUrl.searchParams.append("udm", 2);
   searchUrl.searchParams.append("tbm", "isch");
 
-  const executablePath = process.env?.CHROME_EXECUTABLE_PATH || undefined;
+  const executablePath = process.env?.CHROME_EXECUTABLE_PATH?.trim()?.length > 0 ? process.env.CHROME_EXECUTABLE_PATH : undefined;
 
   const browser = await puppeteer.launch({
     headless: "new",
