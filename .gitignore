@@ -2,7 +2,7 @@
 node_modules
 
 #Generated dirs when code is executed | Data storage
-tests/test-gen
+tests/tests-gen
 storage
 
 #IDE config dir
