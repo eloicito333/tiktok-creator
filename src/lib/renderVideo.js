@@ -1,4 +1,8 @@
-import { __rootdirname } from "#src/dirnames";
+import { bundle } from '@remotion/bundler';
+import { selectComposition, renderMedia } from '@remotion/renderer';
+
+
+import { __rootdirname } from "#src/dirnames.js";
 import path from "path"
 
 export const renderVideo = async (videoId, outputPath, inputProps) => {

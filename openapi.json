@@ -2,12 +2,12 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Video Script API",
-    "version": "1.0.0",
-    "description": "API for generating video scripts with speech and image elements."
+    "version": "1.2.0",
+    "description": "API for generating and rendering video scripts with speech, image, and pause elements. Compatible with OpenAI function calling."
   },
   "servers": [
     {
-      "url": "https://classic-stingray-special.ngrok-free.app",
+      "url": "https://tunel-falset.eloibc.com",
       "description": "Local server"
     }
   ],
@@ -15,8 +15,8 @@
     "/video/script": {
       "post": {
         "operationId": "createVideoScript",
-        "summary": "Create a new video script",
-        "description": "Processes a script and generates necessary files and audio.",
+        "summary": "Create a new video script and render video",
+        "description": "Processes a script, generates all necessary files, and renders the video. Accepts background video selection.",
         "requestBody": {
           "required": true,
           "content": {
@@ -24,50 +24,149 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "script": {
-                    "$ref": "#/components/schemas/Script"
+                  "title": { "type": "string", "description": "Title for the video." },
+                  "script": { "$ref": "#/components/schemas/Script" },
+                  "backgroundVideo": {
+                    "oneOf": [
+                      { "type": "string", "description": "Background video type (folder name)." },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string", "description": "Background video type (folder name)." },
+                          "variation": { "type": "string", "description": "Background video variation (file name or index)." }
+                        },
+                        "required": ["type"]
+                      }
+                    ],
+                    "description": "Background video selection. If omitted, a random one is chosen."
                   }
                 },
-                "required": ["script"]
+                "required": ["title", "script"]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Script processed successfully",
+            "description": "Script processed and video rendered successfully.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "videoId": {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "Unique identifier for the generated video."
-                    }
+                    "videoId": { "type": "string", "format": "uuid" },
+                    "title": { "type": "string" },
+                    "videoTimeline": { "$ref": "#/components/schemas/VideoTimeline" },
+                    "backgroundVideo": { "type": "string" }
                   },
-                  "required": ["videoId"]
+                  "required": ["videoId", "title", "videoTimeline"]
                 }
               }
             }
           },
-          "400": {
-            "description": "Invalid input",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["error"]
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/video/timeline/{id}": {
+      "post": {
+        "operationId": "generateTimelineAndRender",
+        "summary": "Generate a timeline and optionally render a video",
+        "description": "Given a processed script, generates a new video timeline and optionally renders the video. Accepts background video selection.",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "render", "in": "query", "required": false, "schema": { "type": "string", "enum": ["true", "false"] }, "description": "If false, only the timeline is created." }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "backgroundVideo": {
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "variation": { "type": "string" }
+                        },
+                        "required": ["type"]
+                      }
+                    ]
+                  }
                 }
               }
             }
           }
+        },
+        "responses": {
+          "200": { "description": "Timeline generated (and video rendered if requested)." },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/video/render": {
+      "post": {
+        "operationId": "renderVideo",
+        "summary": "Render a video from a timeline version",
+        "description": "Renders a video given a video id and timeline version. If no version is provided, uses the latest.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string", "description": "Video id." },
+                  "timelineVersion": { "type": "integer", "description": "Timeline version to render." },
+                  "backgroundVideo": {
+                    "oneOf": [
+                      { "type": "string" },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": { "type": "string" },
+                          "variation": { "type": "string" }
+                        },
+                        "required": ["type"]
+                      }
+                    ]
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Video rendered successfully." },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "/video/{id}": {
+      "get": {
+        "operationId": "getRenderedVideo",
+        "summary": "Get the rendered video file",
+        "description": "Returns the rendered video file for the given id. If no version is specified, returns the latest.",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "version", "in": "query", "required": false, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "The video file." },
+          "404": { "description": "Video not found." }
+        }
+      }
+    },
+    "/video/background-videos-info": {
+      "get": {
+        "operationId": "getBackgroundVideosInfo",
+        "summary": "Get available background videos info",
+        "description": "Returns an object with available background video types and their absolute paths.",
+        "responses": {
+          "200": { "description": "Background videos info returned." }
         }
       }
     }
@@ -78,61 +177,65 @@
         "type": "array",
         "items": {
           "oneOf": [
-            {
-              "$ref": "#/components/schemas/Speech"
-            },
-            {
-              "$ref": "#/components/schemas/Image"
-            }
+            { "$ref": "#/components/schemas/Speech" },
+            { "$ref": "#/components/schemas/Image" },
+            { "$ref": "#/components/schemas/Pause" }
           ]
         }
       },
       "Speech": {
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["speech"]
-          },
-          "agent": {
-            "type": "string",
-            "description": "The agent speaking. Must be from available agents."
-          },
-          "text": {
-            "type": "string",
-            "description": "The text to be spoken."
-          },
-          "lang": {
-            "type": "string",
-            "enum": ["ca", "en", "es"],
-            "description": "Language of the speech."
-          }
+          "type": { "type": "string", "enum": ["speech"] },
+          "agent": { "type": "string", "description": "The agent speaking." },
+          "text": { "type": "string" },
+          "lang": { "type": "string", "enum": ["ca", "en", "es"] }
         },
         "required": ["type", "agent", "text", "lang"]
       },
       "Image": {
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["image"]
-          },
-          "source": {
-            "type": "string",
-            "enum": ["web", "ai"],
-            "description": "Source of the image."
-          },
-          "prompt": {
-            "type": "string",
-            "description": "Prompt for AI-generated images or search query for web images."
-          },
+          "type": { "type": "string", "enum": ["image"] },
+          "source": { "type": "string", "enum": ["web", "ai"], "description": "Source of the image (web search or AI generated)." },
+          "prompt": { "type": "string", "description": "Prompt for AI-generated images or search query for web images." },
           "duration": {
-            "type": "number",
-            "minimum": 1,
-            "description": "Duration in milliseconds for the image to be displayed."
+            "oneOf": [
+              { "type": "number", "minimum": 1, "description": "Duration in milliseconds for the image to be displayed. If null, the image will be shown until the next image appears or the video ends." },
+              { "type": "null", "description": "If null, the image will be shown until the next image appears or the video ends." }
+            ],
+            "description": "Duration in milliseconds for the image to be displayed. If null, the image will be shown until the next image appears or the video ends."
+          },
+          "when": {
+            "type": "object",
+            "properties": {
+              "after_spoken_word": { "type": "number", "description": "Index of the spoken word after which the image should appear." }
+            },
+            "required": ["after_spoken_word"],
+            "description": "Specifies when the image should appear, based on the spoken word index."
           }
         },
-        "required": ["type", "source", "prompt", "duration"]
+        "required": ["type", "source", "prompt", "duration", "when"],
+        "description": "Image element for the video timeline."
+      },
+      "Pause": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["pause"] },
+          "duration": { "type": "number", "minimum": 1 }
+        },
+        "required": ["type", "duration"]
+      },
+      "VideoTimeline": {
+        "type": "object",
+        "properties": {
+          "images": { "type": "array", "items": { "type": "object" } },
+          "audio": { "type": "array", "items": { "type": "object" } },
+          "agentImages": { "type": "array", "items": { "type": "object" } },
+          "captions": { "type": "array", "items": { "type": "object" } },
+          "totalDuration": { "type": "number" }
+        },
+        "required": ["images", "audio", "agentImages", "captions", "totalDuration"]
       }
     }
   }
