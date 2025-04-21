@@ -1,22 +1,31 @@
-  // remotion/Root.tsx
-  import React from 'react';
-  import { Composition } from 'remotion';
-  import { TikTokVideo } from '#remotion/TikTokVideo.jsx';
+import React from "react";
+import { Composition } from "remotion";
+import TikTokVideo from "#remotion/TikTokVideo.jsx";
+import { videoConfig } from "#remotion/videoConfig.js";
+import { msToFps } from "#remotion/lib/timeUtils.js";
+import '#remotion/index.css';
 
-  export const RemotionRoot = ({title, videoTimeline}) => {
-    return (
-      <>
-        <Composition
-          id={title}
-          durationInFrames={150}
-          fps={30}
-          width={1080}   
-          height={1920}
-          component={TikTokVideo}
-          defaultProps={{
-            videoTimeline,
-          }}
-        />
-      </>
-    );
+const calculateMetadata = ({ props }) => {
+  return {
+    durationInFrames: msToFps(props.videoTimeline.totalDuration),
+    fps: videoConfig.fps,
+    width: videoConfig.width,
+    height: videoConfig.height,
+    props,
   };
+};
+
+const RemotionRoot = ({ videoTimeline }) => {
+  return (
+    <>
+      <Composition
+        id="TikTokVideo"
+        component={TikTokVideo}
+        defaultProps={{ videoTimeline }}
+        calculateMetadata={calculateMetadata}
+      />
+    </>
+  );
+};
+
+export default RemotionRoot;
